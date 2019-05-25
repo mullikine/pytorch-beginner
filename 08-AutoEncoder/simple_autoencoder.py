@@ -31,7 +31,7 @@ img_transform = transforms.Compose([
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
-dataset = MNIST('./data', transform=img_transform)
+dataset = MNIST('./data', transform=img_transform,download=True)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
@@ -57,7 +57,7 @@ class autoencoder(nn.Module):
         return x
 
 
-model = autoencoder().cuda()
+model = autoencoder()
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
     model.parameters(), lr=learning_rate, weight_decay=1e-5)
@@ -66,7 +66,7 @@ for epoch in range(num_epochs):
     for data in dataloader:
         img, _ = data
         img = img.view(img.size(0), -1)
-        img = Variable(img).cuda()
+        img = Variable(img)
         # ===================forward=====================
         output = model(img)
         loss = criterion(output, img)
